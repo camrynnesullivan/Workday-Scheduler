@@ -41,19 +41,26 @@
 // col 2. text box, which needs attribute to help differentiate it
 // col 3. save box, which will locally save whats in the box, needs atrributes aswell
 // ----------------------------------------------------------------
+
+//DEPENDENCIES========================================================================
+
+var currentDay = document.querySelector("#currentDay");
+
 // ------------------------------------------------------------------
 //TODO: as soon as i open my page get document on ready
 $(document).ready(function () {
   console.log("ready!");
 });
-// TO GET THE CURRENT DATE - find a way to display the day of the week
+// TO GET THE CURRENT DATE - find a way to display the day of the week- we found this online!
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, "0");
 var mm = String(today.getMonth() + 1).padStart(2, "0");
 //January is 0!
 var yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
-document.write(today);
+currentDay.append(today);
+
+// document.write(today);
 // TO GET CURRENT TIME - DONE
 // gets the current of the user when are on the website
 function myHour() {
@@ -95,21 +102,41 @@ var time = [
 ];
 console.log(time);
 // STYLING - for loop that iterates through the time array to generate the div colors
-function colorBlock() {
-  for (var i = 0; i < time.length; i++) {
-    if (myHour === time[i]) {
-      //if time.key === myHour, then block is red
-    }
-    if (myHour < time[i]) {
-      //if time.key < myHour, then block is grey
-    }
-    if (myHour > time[i]) {
-      // if time.key> if time.key < myHour, then block is green
-    }
-    //     if (myHour < 09 || myHour > 17){
-    // //turn  all the divs to yellow
+$(".time-block").each(function () {
+  console.log(this);
+  var timeRow = $(this);
+  var now = myHour();
+  var time = parseInt(timeRow.attr("id").split("-")[1]);
+  console.log(time);
+  if (now === time) {
+    $(this).addClass("present");
+    //if time.key === myHour, then block is red
   }
-}
+  if (now > time) {
+    $(this).addClass("past");
+    //if time.key < myHour, then block is grey
+  }
+  if (now < time) {
+    $(this).addClass("future");
+    // if time.key> if time.key < myHour, then block is green
+  }
+});
+
+// function colorBlock() {
+//   for (var i = 0; i < time.length; i++) {
+//     if (myHour === time[i]) {
+//       //if time.key === myHour, then block is red
+//     }
+//     if (myHour < time[i]) {
+//       //if time.key < myHour, then block is grey
+//     }
+//     if (myHour > time[i]) {
+//       // if time.key> if time.key < myHour, then block is green
+//     }
+//     //     if (myHour < 09 || myHour > 17){
+//     // //turn  all the divs to yellow
+//   }
+// }
 // TODO: work on coloring the blocks with the for loop
 //Code from assignement 28
 // input - creates a pink banner on the page of the assignmeent after typing text in a text box above that once you press enter it will create a list item
@@ -118,40 +145,50 @@ function colorBlock() {
 //We instead would like the banner when clicked, activate into a text area, which will allow the user to type in text
 //which wil be saved once the user presses the button on the side
 //LOCALSTORAGE if a local storage info is null set object to empty string
-var userInputByHour = [];
-//
-// function renderTodos() {
-//     // Clear todoList element and update todoCountSpan
-//     todoList.innerHTML = "";
-//     todoCountSpan.textContent = todos.length;
-//     // Render a new li for each todo
-//     for (var i = 0; i < todos.length; i++) {
-//         var todo = todos[i];
-//         var li = document.createElement(“li”);
-//         li.textContent = todo;
-//         li.setAttribute(“data-index”, i);
-//         var button = document.createElement(“button”);
-//         button.textContent = “Complete”;
-//         li.appendChild(button);
-//         todoList.appendChild(li);
-//     }
+
+//DEPENDENCIES===========================================
+// var saveButton = document.querySelectorAll(".saveBtn");
+// var userInputByHour = [
+//   {
+//     hour: "",
+//     task: "",
+//   },
+// ];
+// var descriptionText = document.querySelector(".description");
+// //USER INPUT=============================================
+// When the user types in their schedule
+
+//Then they click save - is there a way we can make this a .forEach?
+// for (let i = 0; i < saveButton.length; i++) {
+//   saveButton[i].addEventListener("click", function () {
+//     console.log("Button was clicked.");
+//     var divHour = event.target.parentNode.getAttribute("id");
+//     var descriptionTask = descriptionText.value.trim();
+//     console.log(divHour);
+//     console.log(descriptionTask);
+//     // storeTasks(divHour, descriptionTask);
+//   });
 // }
-// function init() {
-//     // Write code here to check if there are todos in localStorage
-//     // If so, parse the value from localStorage and assign it to the todos variable
-//     todos = JSON.parse(localStorage.getItem(“todos”)) || []; <<- short circuit operator
-//     // Render todos to the DOM
-//     renderTodos();
-// }
-// function storeTodos() {
-//     // Add code here to stringify the todos array and save it to the “todos” key in localStorage
-//     localStorage.setItem(“todos”, JSON.stringify(todos));
-// }
-// // When form is submitted...
-// todoForm.addEventListener(“submit”, function (event) {
-//     event.preventDefault();
-//     var todoText = todoInput.value.trim();
-//     // Return from function early if submitted todoText is blank
-//     if (todoText === “”) {
-//         return;
-//     }
+
+var tasks = [];
+
+$(".saveBtn").on("click", function () {
+  //get nearby values.
+  console.log(this);
+  var text = $(this).siblings(".description").val();
+  var time = $(this).parent().attr("id");
+  //set items in local storage.
+  localStorage.setItem(time, text);
+});
+
+$("#hour-9 .description").val(localStorage.getItem("hour-9"));
+$("#hour-10 .description").val(localStorage.getItem("hour-10"));
+$("#hour-11 .description").val(localStorage.getItem("hour-11"));
+$("#hour-12 .description").val(localStorage.getItem("hour-12"));
+$("#hour-13 .description").val(localStorage.getItem("hour-13"));
+$("#hour-14 .description").val(localStorage.getItem("hour-14"));
+$("#hour-15 .description").val(localStorage.getItem("hour-15"));
+$("#hour-16 .description").val(localStorage.getItem("hour-16"));
+$("#hour-17 .description").val(localStorage.getItem("hour-17"));
+
+console.log(myHour());
